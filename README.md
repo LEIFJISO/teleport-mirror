@@ -1,25 +1,86 @@
+该项目是一个minecraft mod项目。版本1.21.1，加载器为neoforge。
+mod包名为com.le.teleportmirror 。
+目前规划功能如下：
+# 一、核心功能分类
+魔镜分为两种类型：
 
-Installation information
-=======
+回城魔镜：使用后快速传送回出生点（优先床/重生锚设置点，否则世界出生点）。
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+传送魔镜：使用后传送使用者至其他使用者指定的玩家身边。
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+# 二、等级与属性
+每种魔镜分多个等级（初级 / 中级 / 高级 / 永久），属性差异包括：
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
+属性	说明
+耐久度	每次使用消耗1点，耗尽后物品消失。初级默认10，中级50，高级100，永久无限（可配置）。
+冷却时间	两次使用之间的间隔，默认1分钟（可配置）。
+副作用	使用后附加负面效果，等级越低副作用越强。
 
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
+# 三、副作用设计（低等级/一次性镜子）
+初级：反胃10s；凋零5s；饱食度减半
+中级：反胃5s；凋零3s；饱食度减半
+高级：反胃3s；饱食度减半
+永久：无
 
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+四、合成配方（以为例）
+
+## 回城魔镜
+### 初级回城魔镜
+金锭 指南针 金锭
+铁锭 蓝色染色玻璃板 铁锭
+铜锭 铁锭 铜锭
+
+### 中级回城魔镜
+钻石 末影珍珠 钻石
+青金石 初级回城魔镜 青金石
+红石 紫水晶碎片 红石
+
+### 高级回城魔镜
+钻石 末影之眼 钻石
+绿宝石 中级回城魔镜 绿宝石
+钻石 烈焰棒 钻石
+
+### 永久回城魔镜
+潜影壳 紫颂果 潜影壳
+末影珍珠 高级回城魔镜 末影珍珠
+潜影壳 烈焰棒 潜影壳
+
+## 传送魔镜
+### 初级传送魔镜
+金锭 拴绳 金锭
+铁锭 橙色染色玻璃板 铁锭
+铜锭 铁锭 铜锭
+
+### 中级传送魔镜
+钻石 末影珍珠 钻石
+青金石 初级传送魔镜 青金石
+红石 紫水晶碎片 红石
+
+### 高级传送魔镜
+钻石 末影之眼 钻石
+绿宝石 中级传送魔镜 绿宝石
+钻石 烈焰棒 钻石
+
+### 永久传送魔镜
+潜影壳 紫颂果 潜影壳
+末影珍珠 高级传送魔镜 末影珍珠
+潜影壳 烈焰棒 潜影壳
+
+# 五、特殊机制
+待定（保留接口，暂时不实装）：一次性魔镜：低成本、低副作用（例如红石+青金石合成），用后即毁。
+
+使用方式：长按右键蓄力使用。传送魔镜需选择目标玩家，给出两种可选的 UI 方案：
+
+长按右键弹出轮盘选择同队伍（原版的team）的玩家头像。（默认方案）
+
+右键后输入玩家名字（简单直接）。
+
+# 六、可配置项
+各级魔镜耐久度与合成配方。
+
+冷却时间。
+
+副作用类型与强度。
+
+# 七、贴图
+创建每个魔镜对应的占位贴图。
