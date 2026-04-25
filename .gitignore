@@ -32,6 +32,9 @@ bin/
 ### Mac OS ###
 .DS_Store
 
+### Git Credentials ###
+.git-credentials
+
 ### Minecraft Modding ###
 run/
 !**/src/**/run/
