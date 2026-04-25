@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SCS",
+    "ERE",
+    "SBS"
+  ],
+  "key": {
+    "S": { "item": "minecraft:shulker_shell" },
+    "C": { "item": "minecraft:chorus_fruit" },
+    "E": { "item": "minecraft:ender_pearl" },
+    "R": { "item": "teleportmirror:advanced_return_mirror" },
+    "B": { "item": "minecraft:blaze_rod" }
+  },
+  "result": {
+    "id": "teleportmirror:permanent_return_mirror",
+    "count": 1
+  }
+}

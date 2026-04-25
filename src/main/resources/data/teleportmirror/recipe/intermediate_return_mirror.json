@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DED",
+    "LRL",
+    "TAT"
+  ],
+  "key": {
+    "D": { "item": "minecraft:diamond" },
+    "E": { "item": "minecraft:ender_pearl" },
+    "L": { "item": "minecraft:lapis_lazuli" },
+    "R": { "item": "teleportmirror:basic_return_mirror" },
+    "T": { "item": "minecraft:redstone" },
+    "A": { "item": "minecraft:amethyst_shard" }
+  },
+  "result": {
+    "id": "teleportmirror:intermediate_return_mirror",
+    "count": 1
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DED",
+    "MRM",
+    "DBD"
+  ],
+  "key": {
+    "D": { "item": "minecraft:diamond" },
+    "E": { "item": "minecraft:ender_eye" },
+    "M": { "item": "minecraft:emerald" },
+    "R": { "item": "teleportmirror:intermediate_return_mirror" },
+    "B": { "item": "minecraft:blaze_rod" }
+  },
+  "result": {
+    "id": "teleportmirror:advanced_return_mirror",
+    "count": 1
+  }
+}

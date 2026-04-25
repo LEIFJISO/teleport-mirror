@@ -1,0 +1,13 @@
+{
+  "itemGroup.teleportmirror": "Teleport Mirror",
+  "item.teleportmirror.basic_return_mirror": "Basic Return Mirror",
+  "item.teleportmirror.intermediate_return_mirror": "Intermediate Return Mirror",
+  "item.teleportmirror.advanced_return_mirror": "Advanced Return Mirror",
+  "item.teleportmirror.permanent_return_mirror": "Permanent Return Mirror",
+  "item.teleportmirror.basic_teleport_mirror": "Basic Teleport Mirror",
+  "item.teleportmirror.intermediate_teleport_mirror": "Intermediate Teleport Mirror",
+  "item.teleportmirror.advanced_teleport_mirror": "Advanced Teleport Mirror",
+  "item.teleportmirror.permanent_teleport_mirror": "Permanent Teleport Mirror",
+  "screen.teleportmirror.select_player": "Select Target Player",
+  "teleportmirror.cooldown": "Mirror is on cooldown"
+}

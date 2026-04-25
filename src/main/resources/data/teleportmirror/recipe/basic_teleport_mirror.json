@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GLG",
+    "IOI",
+    "PIP"
+  ],
+  "key": {
+    "G": { "item": "minecraft:gold_ingot" },
+    "L": { "item": "minecraft:lead" },
+    "O": { "item": "minecraft:orange_stained_glass_pane" },
+    "I": { "item": "minecraft:iron_ingot" },
+    "P": { "item": "minecraft:copper_ingot" }
+  },
+  "result": {
+    "id": "teleportmirror:basic_teleport_mirror",
+    "count": 1
+  }
+}

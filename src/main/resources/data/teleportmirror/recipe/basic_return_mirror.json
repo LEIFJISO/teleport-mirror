@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GCG",
+    "IBI",
+    "PIP"
+  ],
+  "key": {
+    "G": { "item": "minecraft:gold_ingot" },
+    "C": { "item": "minecraft:compass" },
+    "B": { "item": "minecraft:blue_stained_glass_pane" },
+    "I": { "item": "minecraft:iron_ingot" },
+    "P": { "item": "minecraft:copper_ingot" }
+  },
+  "result": {
+    "id": "teleportmirror:basic_return_mirror",
+    "count": 1
+  }
+}

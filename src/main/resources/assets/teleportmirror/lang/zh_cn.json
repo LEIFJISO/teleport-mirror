@@ -1,0 +1,13 @@
+{
+  "itemGroup.teleportmirror": "传送魔镜",
+  "item.teleportmirror.basic_return_mirror": "初级回城魔镜",
+  "item.teleportmirror.intermediate_return_mirror": "中级回城魔镜",
+  "item.teleportmirror.advanced_return_mirror": "高级回城魔镜",
+  "item.teleportmirror.permanent_return_mirror": "永久回城魔镜",
+  "item.teleportmirror.basic_teleport_mirror": "初级传送魔镜",
+  "item.teleportmirror.intermediate_teleport_mirror": "中级传送魔镜",
+  "item.teleportmirror.advanced_teleport_mirror": "高级传送魔镜",
+  "item.teleportmirror.permanent_teleport_mirror": "永久传送魔镜",
+  "screen.teleportmirror.select_player": "选择目标玩家",
+  "teleportmirror.cooldown": "魔镜冷却中"
+}
