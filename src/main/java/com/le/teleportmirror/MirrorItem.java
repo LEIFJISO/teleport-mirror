@@ -57,27 +57,31 @@ public class MirrorItem extends Item {
     }
 
     @Override
-    public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeCharged) {
-        if (!(entity instanceof Player player)) {
-            return;
-        }
-
-        int chargeTicks = Config.CHARGE_TICKS.get();
-        if (timeCharged < chargeTicks) {
-            return;
-        }
-
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
         if (level.isClientSide) {
             return;
         }
 
-        ServerPlayer serverPlayer = (ServerPlayer) player;
+        int chargeTicks = Config.CHARGE_TICKS.get();
+        int usedTicks = getUseDuration(stack, livingEntity) - remainingUseDuration;
 
-        if (type == MirrorType.RETURN) {
-            performReturnTeleport(serverPlayer, stack);
-        } else {
-            MirrorNetwork.sendOpenSelectionToClient(serverPlayer, tier);
+        if (usedTicks >= chargeTicks) {
+            if (!(livingEntity instanceof ServerPlayer serverPlayer)) {
+                return;
+            }
+
+            livingEntity.stopUsingItem();
+
+            if (type == MirrorType.RETURN) {
+                performReturnTeleport(serverPlayer, stack);
+            } else {
+                MirrorNetwork.sendOpenSelectionToClient(serverPlayer, tier);
+            }
         }
+    }
+
+    @Override
+    public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeCharged) {
     }
 
     private void performReturnTeleport(ServerPlayer player, ItemStack stack) {

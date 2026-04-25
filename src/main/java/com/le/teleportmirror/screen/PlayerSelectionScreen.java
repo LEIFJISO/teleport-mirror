@@ -89,7 +89,8 @@ public class PlayerSelectionScreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
-        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 15, 0xFFFFFF);
+        guiGraphics.fill(0, 0, this.width, 32, 0x88000000);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 10, 0xFFFFFF);
         super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
