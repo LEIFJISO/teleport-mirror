@@ -1,5 +1,10 @@
 package com.le.teleportmirror;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -7,16 +12,13 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
-import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.food.FoodData;
 
 public class MirrorItem extends Item {
     private final MirrorTier tier;
@@ -84,6 +86,15 @@ public class MirrorItem extends Item {
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeCharged) {
     }
 
+    private boolean canCrossDimension() {
+        return switch (tier) {
+            case BASIC -> Config.ALLOW_CROSS_DIMENSION_BASIC.get();
+            case INTERMEDIATE -> Config.ALLOW_CROSS_DIMENSION_INTERMEDIATE.get();
+            case ADVANCED -> Config.ALLOW_CROSS_DIMENSION_ADVANCED.get();
+            case PERMANENT -> Config.ALLOW_CROSS_DIMENSION_PERMANENT.get();
+        };
+    }
+
     private void performReturnTeleport(ServerPlayer player, ItemStack stack) {
         ServerLevel serverLevel = player.serverLevel();
         BlockPos targetPos;
@@ -105,6 +116,10 @@ public class MirrorItem extends Item {
             targetPos = targetLevel.getSharedSpawnPos();
         }
 
+        if (!canCrossDimension() && targetLevel.dimension() != serverLevel.dimension()) {
+            return;
+        }
+
         consumeMirrorUse(player, stack);
 
         player.teleportTo(targetLevel, targetPos.getCenter().x, targetPos.getCenter().y, targetPos.getCenter().z,
@@ -116,6 +131,10 @@ public class MirrorItem extends Item {
     public void performTeleportToPlayer(ServerPlayer player, ServerPlayer target, ItemStack stack) {
         ServerLevel targetLevel = target.serverLevel();
         BlockPos targetPos = target.blockPosition();
+
+        if (!canCrossDimension() && targetLevel.dimension() != player.serverLevel().dimension()) {
+            return;
+        }
 
         consumeMirrorUse(player, stack);
 
@@ -155,42 +174,67 @@ public class MirrorItem extends Item {
         player.getCooldowns().addCooldown(this, cooldownTicks);
     }
 
-    private void applySideEffects(Player player) {
-        int nauseaDuration;
-        int witherDuration;
+    private String getEffectsConfig() {
+        return switch (type) {
+            case RETURN -> switch (tier) {
+                case BASIC -> Config.EFFECTS_RETURN_BASIC.get();
+                case INTERMEDIATE -> Config.EFFECTS_RETURN_INTERMEDIATE.get();
+                case ADVANCED -> Config.EFFECTS_RETURN_ADVANCED.get();
+                case PERMANENT -> Config.EFFECTS_RETURN_PERMANENT.get();
+            };
+            case TELEPORT -> switch (tier) {
+                case BASIC -> Config.EFFECTS_TELEPORT_BASIC.get();
+                case INTERMEDIATE -> Config.EFFECTS_TELEPORT_INTERMEDIATE.get();
+                case ADVANCED -> Config.EFFECTS_TELEPORT_ADVANCED.get();
+                case PERMANENT -> Config.EFFECTS_TELEPORT_PERMANENT.get();
+            };
+        };
+    }
 
-        switch (tier) {
-            case BASIC:
-                nauseaDuration = Config.BASIC_NAUSEA_SECONDS.get() * 20;
-                witherDuration = Config.BASIC_WITHER_SECONDS.get() * 20;
-                if (nauseaDuration > 0) {
-                    player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, nauseaDuration, 0));
-                }
-                if (witherDuration > 0) {
-                    player.addEffect(new MobEffectInstance(MobEffects.WITHER, witherDuration, 0));
-                }
-                halveFood(player);
-                break;
-            case INTERMEDIATE:
-                nauseaDuration = Config.INTERMEDIATE_NAUSEA_SECONDS.get() * 20;
-                witherDuration = Config.INTERMEDIATE_WITHER_SECONDS.get() * 20;
-                if (nauseaDuration > 0) {
-                    player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, nauseaDuration, 0));
-                }
-                if (witherDuration > 0) {
-                    player.addEffect(new MobEffectInstance(MobEffects.WITHER, witherDuration, 0));
-                }
-                halveFood(player);
-                break;
-            case ADVANCED:
-                nauseaDuration = Config.ADVANCED_NAUSEA_SECONDS.get() * 20;
-                if (nauseaDuration > 0) {
-                    player.addEffect(new MobEffectInstance(MobEffects.CONFUSION, nauseaDuration, 0));
-                }
-                halveFood(player);
-                break;
-            case PERMANENT:
-                break;
+    private boolean shouldHalveFood() {
+        return switch (tier) {
+            case BASIC -> Config.HALVE_FOOD_BASIC.get();
+            case INTERMEDIATE -> Config.HALVE_FOOD_INTERMEDIATE.get();
+            case ADVANCED -> Config.HALVE_FOOD_ADVANCED.get();
+            case PERMANENT -> Config.HALVE_FOOD_PERMANENT.get();
+        };
+    }
+
+    private void applySideEffects(Player player) {
+        String effectsConfig = getEffectsConfig();
+        if (effectsConfig == null || effectsConfig.isBlank()) {
+            return;
+        }
+
+        String[] effectEntries = effectsConfig.split(";");
+        for (String entry : effectEntries) {
+            entry = entry.trim();
+            if (entry.isEmpty()) continue;
+
+            String[] parts = entry.split(",");
+            if (parts.length < 3) continue;
+
+            String effectId = parts[0].trim();
+            int durationSeconds;
+            int amplifier;
+            try {
+                durationSeconds = Integer.parseInt(parts[1].trim());
+                amplifier = Integer.parseInt(parts[2].trim());
+            } catch (NumberFormatException e) {
+                continue;
+            }
+
+            if (durationSeconds <= 0) continue;
+
+            var effectKey = ResourceKey.create(Registries.MOB_EFFECT,
+                    ResourceLocation.parse(effectId));
+            var effectHolder = BuiltInRegistries.MOB_EFFECT.getHolder(effectKey);
+            effectHolder.ifPresent(holder ->
+                    player.addEffect(new MobEffectInstance(holder, durationSeconds * 20, amplifier)));
+        }
+
+        if (shouldHalveFood()) {
+            halveFood(player);
         }
     }
 

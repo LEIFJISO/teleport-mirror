@@ -38,12 +38,19 @@ public class MirrorNetwork {
     public static void sendOpenSelectionToClient(ServerPlayer player, MirrorTier tier) {
         List<String> names = new ArrayList<>();
         List<UUID> uuids = new ArrayList<>();
+        boolean teamOnly = Config.TELEPORT_TEAM_ONLY.get();
 
         for (ServerPlayer onlinePlayer : player.server.getPlayerList().getPlayers()) {
-            if (!onlinePlayer.getUUID().equals(player.getUUID())) {
-                names.add(onlinePlayer.getName().getString());
-                uuids.add(onlinePlayer.getUUID());
+            if (onlinePlayer.getUUID().equals(player.getUUID())) {
+                continue;
             }
+            if (teamOnly && player.getTeam() != null) {
+                if (onlinePlayer.getTeam() != player.getTeam()) {
+                    continue;
+                }
+            }
+            names.add(onlinePlayer.getName().getString());
+            uuids.add(onlinePlayer.getUUID());
         }
 
         PacketDistributor.sendToPlayer(player, new OpenPlayerSelectionPayload(names, uuids, tier.getName()));
