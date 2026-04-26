@@ -32,12 +32,8 @@ public class Config {
             .define("allowCrossDimension.permanent", true);
 
     public static final ModConfigSpec.BooleanValue TELEPORT_TEAM_ONLY = BUILDER
-            .comment("Teleport Mirror can only target players on the same team object")
-            .define("teleportTeamOnly", true);
-
-    public static final ModConfigSpec.BooleanValue TELEPORT_SAME_TEAM_ONLY = BUILDER
-            .comment("Teleport Mirror can only target players with the same team name (team tag). Default: off.")
-            .define("teleportSameTeamOnly", false);
+            .comment("Teleport Mirror can only target players with the same team name (team tag).")
+            .define("teleportTeamOnly", false);
 
     public static final ModConfigSpec.IntValue BASIC_DURABILITY = BUILDER
             .comment("Durability for Basic tier mirrors")
@@ -51,21 +47,37 @@ public class Config {
             .comment("Durability for Advanced tier mirrors")
             .defineInRange("advancedDurability", 100, 0, Integer.MAX_VALUE);
 
-    public static final ModConfigSpec.ConfigValue<String> FOOD_COST_BASIC = BUILDER
-            .comment("Food cost for Basic tier mirrors. \"50%\" = 50% of current food. \"10\" = fixed 10 half-shanks. Empty \"\" = no cost.")
-            .define("foodCost.basic", "50%");
+    public static final ModConfigSpec.ConfigValue<String> FOOD_LEVEL_BASIC = BUILDER
+            .comment("Food level cost for Basic tier mirrors (half-shanks). \"50%\"=percentage, \"10\"=fixed, \"\"=none.")
+            .define("foodCost.basic.foodLevel", "50%");
 
-    public static final ModConfigSpec.ConfigValue<String> FOOD_COST_INTERMEDIATE = BUILDER
-            .comment("Food cost for Intermediate tier mirrors. \"50%\" = 50% of current food. \"10\" = fixed 10 half-shanks. Empty \"\" = no cost.")
-            .define("foodCost.intermediate", "50%");
+    public static final ModConfigSpec.ConfigValue<String> SATURATION_COST_BASIC = BUILDER
+            .comment("Saturation cost for Basic tier mirrors. \"50%\"=percentage, \"4.0\"=fixed, \"\"=none.")
+            .define("foodCost.basic.saturation", "50%");
 
-    public static final ModConfigSpec.ConfigValue<String> FOOD_COST_ADVANCED = BUILDER
-            .comment("Food cost for Advanced tier mirrors. \"50%\" = 50% of current food. \"10\" = fixed 10 half-shanks. Empty \"\" = no cost.")
-            .define("foodCost.advanced", "50%");
+    public static final ModConfigSpec.ConfigValue<String> FOOD_LEVEL_INTERMEDIATE = BUILDER
+            .comment("Food level cost for Intermediate tier mirrors (half-shanks). \"50%\"=percentage, \"10\"=fixed, \"\"=none.")
+            .define("foodCost.intermediate.foodLevel", "50%");
 
-    public static final ModConfigSpec.ConfigValue<String> FOOD_COST_PERMANENT = BUILDER
-            .comment("Food cost for Permanent tier mirrors. \"50%\" = 50% of current food. \"10\" = fixed 10 half-shanks. Empty \"\" = no cost.")
-            .define("foodCost.permanent", "");
+    public static final ModConfigSpec.ConfigValue<String> SATURATION_COST_INTERMEDIATE = BUILDER
+            .comment("Saturation cost for Intermediate tier mirrors. \"50%\"=percentage, \"4.0\"=fixed, \"\"=none.")
+            .define("foodCost.intermediate.saturation", "50%");
+
+    public static final ModConfigSpec.ConfigValue<String> FOOD_LEVEL_ADVANCED = BUILDER
+            .comment("Food level cost for Advanced tier mirrors (half-shanks). \"50%\"=percentage, \"10\"=fixed, \"\"=none.")
+            .define("foodCost.advanced.foodLevel", "50%");
+
+    public static final ModConfigSpec.ConfigValue<String> SATURATION_COST_ADVANCED = BUILDER
+            .comment("Saturation cost for Advanced tier mirrors. \"50%\"=percentage, \"4.0\"=fixed, \"\"=none.")
+            .define("foodCost.advanced.saturation", "50%");
+
+    public static final ModConfigSpec.ConfigValue<String> FOOD_LEVEL_PERMANENT = BUILDER
+            .comment("Food level cost for Permanent tier mirrors (half-shanks). \"50%\"=percentage, \"10\"=fixed, \"\"=none.")
+            .define("foodCost.permanent.foodLevel", "");
+
+    public static final ModConfigSpec.ConfigValue<String> SATURATION_COST_PERMANENT = BUILDER
+            .comment("Saturation cost for Permanent tier mirrors. \"50%\"=percentage, \"4.0\"=fixed, \"\"=none.")
+            .define("foodCost.permanent.saturation", "");
 
     public static final ModConfigSpec.ConfigValue<String> EFFECTS_RETURN_BASIC = BUILDER
             .comment("Effects for Basic Return Mirror. Format: \"effect_id,dur_sec,amplifier;...\"")

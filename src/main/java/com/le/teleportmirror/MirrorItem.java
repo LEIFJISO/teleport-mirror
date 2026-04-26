@@ -191,12 +191,21 @@ public class MirrorItem extends Item {
         };
     }
 
-    private String getFoodCostConfig() {
+    private String getFoodLevelConfig() {
         return switch (tier) {
-            case BASIC -> Config.FOOD_COST_BASIC.get();
-            case INTERMEDIATE -> Config.FOOD_COST_INTERMEDIATE.get();
-            case ADVANCED -> Config.FOOD_COST_ADVANCED.get();
-            case PERMANENT -> Config.FOOD_COST_PERMANENT.get();
+            case BASIC -> Config.FOOD_LEVEL_BASIC.get();
+            case INTERMEDIATE -> Config.FOOD_LEVEL_INTERMEDIATE.get();
+            case ADVANCED -> Config.FOOD_LEVEL_ADVANCED.get();
+            case PERMANENT -> Config.FOOD_LEVEL_PERMANENT.get();
+        };
+    }
+
+    private String getSaturationConfig() {
+        return switch (tier) {
+            case BASIC -> Config.SATURATION_COST_BASIC.get();
+            case INTERMEDIATE -> Config.SATURATION_COST_INTERMEDIATE.get();
+            case ADVANCED -> Config.SATURATION_COST_ADVANCED.get();
+            case PERMANENT -> Config.SATURATION_COST_PERMANENT.get();
         };
     }
 
@@ -237,28 +246,27 @@ public class MirrorItem extends Item {
     }
 
     private void applyFoodCost(Player player) {
-        String config = getFoodCostConfig();
+        FoodData foodData = player.getFoodData();
+        applyCostValue(getFoodLevelConfig(), (float) foodData.getFoodLevel(), newVal -> foodData.setFoodLevel(newVal.intValue()));
+        applyCostValue(getSaturationConfig(), foodData.getSaturationLevel(), newVal -> foodData.setSaturation(newVal));
+    }
+
+    private void applyCostValue(String config, float currentValue, java.util.function.Consumer<Float> setter) {
         if (config == null || config.isBlank()) {
             return;
         }
-
-        FoodData foodData = player.getFoodData();
         String trimmed = config.trim();
-
         if (trimmed.endsWith("%")) {
             String pctStr = trimmed.substring(0, trimmed.length() - 1);
             try {
                 float percentage = Float.parseFloat(pctStr) / 100f;
-                int cost = Math.round(foodData.getFoodLevel() * percentage);
-                foodData.setFoodLevel(Math.max(0, foodData.getFoodLevel() - cost));
-                foodData.setSaturation(Math.max(0, foodData.getSaturationLevel() * (1f - percentage)));
+                setter.accept(Math.max(0, currentValue * (1f - percentage)));
             } catch (NumberFormatException ignored) {
             }
         } else {
             try {
-                int cost = Integer.parseInt(trimmed);
-                foodData.setFoodLevel(Math.max(0, foodData.getFoodLevel() - cost));
-                foodData.setSaturation(Math.max(0, foodData.getSaturationLevel() - cost));
+                float cost = Float.parseFloat(trimmed);
+                setter.accept(Math.max(0, currentValue - cost));
             } catch (NumberFormatException ignored) {
             }
         }
