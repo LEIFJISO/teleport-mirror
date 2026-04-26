@@ -90,7 +90,14 @@ public class PlayerSelectionScreen extends Screen {
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         guiGraphics.fill(0, 0, this.width, this.height, 0xC0101010);
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 12, 0xFFFFFF);
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+
+        for (var renderable : this.renderables) {
+            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
+        }
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
     }
 
     @Override
