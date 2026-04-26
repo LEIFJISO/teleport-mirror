@@ -1,7 +1,5 @@
 package com.le.teleportmirror;
 
-import com.le.teleportmirror.screen.PlayerSelectionScreen;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -63,9 +61,13 @@ public class MirrorNetwork {
 
     private static void handleOpenSelection(OpenPlayerSelectionPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            Minecraft client = Minecraft.getInstance();
-            MirrorTier tier = MirrorTier.valueOf(payload.tierName.toUpperCase());
-            client.setScreen(new PlayerSelectionScreen(payload.playerNames, payload.playerUuids, tier));
+            try {
+                Class<?> clientHandlerClass = Class.forName("com.le.teleportmirror.MirrorNetworkClient");
+                clientHandlerClass.getMethod("openPlayerSelection", OpenPlayerSelectionPayload.class)
+                        .invoke(null, payload);
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException("Failed to open player selection screen", e);
+            }
         });
     }
 
