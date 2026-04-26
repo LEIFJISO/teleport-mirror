@@ -191,12 +191,12 @@ public class MirrorItem extends Item {
         };
     }
 
-    private boolean shouldHalveFood() {
+    private String getFoodCostConfig() {
         return switch (tier) {
-            case BASIC -> Config.HALVE_FOOD_BASIC.get();
-            case INTERMEDIATE -> Config.HALVE_FOOD_INTERMEDIATE.get();
-            case ADVANCED -> Config.HALVE_FOOD_ADVANCED.get();
-            case PERMANENT -> Config.HALVE_FOOD_PERMANENT.get();
+            case BASIC -> Config.FOOD_COST_BASIC.get();
+            case INTERMEDIATE -> Config.FOOD_COST_INTERMEDIATE.get();
+            case ADVANCED -> Config.FOOD_COST_ADVANCED.get();
+            case PERMANENT -> Config.FOOD_COST_PERMANENT.get();
         };
     }
 
@@ -233,15 +233,35 @@ public class MirrorItem extends Item {
                     player.addEffect(new MobEffectInstance(holder, durationSeconds * 20, amplifier)));
         }
 
-        if (shouldHalveFood()) {
-            halveFood(player);
-        }
+        applyFoodCost(player);
     }
 
-    private void halveFood(Player player) {
+    private void applyFoodCost(Player player) {
+        String config = getFoodCostConfig();
+        if (config == null || config.isBlank()) {
+            return;
+        }
+
         FoodData foodData = player.getFoodData();
-        foodData.setFoodLevel(Math.max(1, foodData.getFoodLevel() / 2));
-        foodData.setSaturation(0);
+        String trimmed = config.trim();
+
+        if (trimmed.endsWith("%")) {
+            String pctStr = trimmed.substring(0, trimmed.length() - 1);
+            try {
+                float percentage = Float.parseFloat(pctStr) / 100f;
+                int cost = Math.round(foodData.getFoodLevel() * percentage);
+                foodData.setFoodLevel(Math.max(0, foodData.getFoodLevel() - cost));
+                foodData.setSaturation(Math.max(0, foodData.getSaturationLevel() * (1f - percentage)));
+            } catch (NumberFormatException ignored) {
+            }
+        } else {
+            try {
+                int cost = Integer.parseInt(trimmed);
+                foodData.setFoodLevel(Math.max(0, foodData.getFoodLevel() - cost));
+                foodData.setSaturation(Math.max(0, foodData.getSaturationLevel() - cost));
+            } catch (NumberFormatException ignored) {
+            }
+        }
     }
 
     @Override
