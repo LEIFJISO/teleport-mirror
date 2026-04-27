@@ -10,7 +10,7 @@
     "C": { "item": "minecraft:chorus_fruit" },
     "E": { "item": "minecraft:ender_pearl" },
     "R": { "item": "teleportmirror:advanced_return_mirror" },
-    "B": { "item": "minecraft:blaze_rod" }
+    "B": { "item": "minecraft:echo_shard" }
   },
   "result": {
     "id": "teleportmirror:permanent_return_mirror",
