@@ -2,6 +2,22 @@ package com.le.teleportmirror;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
+/**
+ * Mod 配置项
+ * <p>
+ * 使用 NeoForge 的 {@link ModConfigSpec} 定义所有可配置项。
+ * 所有配置项按功能分为以下几个部分：
+ * <ul>
+ *   <li>General - 通用设置（冷却时间、蓄力时间）</li>
+ *   <li>Cross-Dimension - 跨维度传送开关</li>
+ *   <li>Teleport Restrictions - 传送限制（同队伍限制）</li>
+ *   <li>Durability - 各级魔镜耐久度</li>
+ *   <li>Food Cost - 饱食度/饱和度消耗</li>
+ *   <li>Side Effects - 副作用效果配置</li>
+ *   <li>Recipe Toggles - 配方启用开关</li>
+ *   <li>Recipe Overrides - 自定义配方覆盖</li>
+ * </ul>
+ */
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
